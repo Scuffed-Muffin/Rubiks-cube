@@ -1,47 +1,38 @@
 import numpy as np
 
-cube = np.array([
-    [["W","W","W"],["W","W","W"],["W","W","W"]],  # Top
-    [["Y","Y","Y"],["Y","Y","Y"],["Y","Y","Y"]],  # Bottom
-    [["R","R","R"],["R","R","R"],["R","R","R"]],  # Front
-    [["O","O","O"],["O","O","O"],["O","O","O"]],  # Back
-    [["G","G","G"],["G","G","G"],["G","G","G"]],  # Right
-    [["B","B","B"],["B","B","B"],["B","B","B"]],  # Left
-])
+cube = np.zeros((6,3,3), dtype= int)
+for face in range(6):
+    cube[face] = face
+#Creates a 3x3x6 matrix that acts as the cube.
+#The numbers 0-5 represent different colours on the cube
+#For example, 0 = white, 1 = red, 2 = orange, 3 = yellow, 4 = green, 5 = blue.
+solved_cube = cube.copy()
+#Creates a template for a solved cube, we can use this as a win condition in the future
 
-def rotate_row_right(num):
-    cube1 = cube.copy()
-    if num == 0 or num == 2:
-        cube[num,0,0] = cube1[num,0,2]
-        cube[num,0,1] = cube1[num,1,2]
-        cube[num,0,2] = cube1[num,2,2]
-        cube[num,1,0] = cube1[num,0,1]
-        cube[num,1,2] = cube1[num,2,1]
-        cube[num,2,0] = cube1[num,0,0]
-        cube[num,2,1] = cube1[num,1,0]
-        cube[num,2,2] = cube1[num,2,0]
-    for i in range(3):
-        cube[2,num,i] = cube1[4,num,i]
-        cube[5,num,i] = cube1[2,num,i]
-        cube[3,num,i] = cube1[5,num,i]
-        cube[4,num,i] = cube1[3,num,i]
 
-    return(cube)
-def rotate_row_left(num):
-    cube1 = cube.copy()
-    if num == 0 or num == 2:
-        cube[num,0,2] = cube1[num,0,0]
-        cube[num,1,2] = cube1[num,0,1]
-        cube[num,2,2] = cube1[num,0,2]
-        cube[num,0,1] = cube1[num,1,0]
-        cube[num,2,1] = cube1[num,1,2]
-        cube[num,0,0] = cube1[num,2,0]
-        cube[num,1,0] = cube1[num,2,1]
-        cube[num,2,0] = cube1[num,2,2]
-    for i in range(3):
-        cube[4,num,i] = cube1[2,num,i]
-        cube[2,num,i] = cube1[5,num,i]
-        cube[5,num,i] = cube1[3,num,i]
-        cube[3,num,i] = cube1[4,num,i]
+def U(cube,direction):
+  cube1 = cube.copy()
+  cube1[0]= np.rot90(cube[0], k = direction)
+  if direction == 1:
+    cube1[[4,3,2,1],0,:] = cube[[1,2,3,4],0,:]
+  elif direction == -1:
+     cube1[[1,2,3,4],0,:] = cube[[4,3,2,1],0,:]
+#Governs both the U and U' movement, U' movement occurs when direction = 1, U movment occurs when direction = -1
 
-def rotate_column_down(num):
+def D(cube,direction):
+  cube1 = cube.copy()
+  cube1[5]= np.rot90(cube[5], k = direction)
+  if direction == 1:
+    cube1[[4,3,2,1],2,:] = cube[[1,2,3,4],2,:]
+  elif direction == -1:
+     cube1[[1,2,3,4],2,:] = cube[[4,3,2,1],2,:]
+#Governs both the D and D' movement, D' movement occurs when direction = 1, D movment occurs when direction = -1
+
+def M(cube,direction):
+  cube1 = cube.copy()
+  if direction == 1:
+    cube1[[4,3,2,1],3,:] = cube[[1,2,3,4],3,:]
+  elif direction == -1:
+     cube1[[1,2,3,4],3,:] = cube[[4,3,2,1],3,:]
+#For simplicity I made a new notation for a legal move which rotates the middle row horizontally, it has the same properties as U and U'.
+
