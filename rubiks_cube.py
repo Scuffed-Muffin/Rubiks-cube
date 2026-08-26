@@ -36,3 +36,29 @@ def M(cube,direction):
      cube1[[1,2,3,4],3,:] = cube[[4,3,2,1],3,:]
 #For simplicity I made a new notation for a legal move which rotates the middle row horizontally, it has the same properties as U and U'.
 
+def L(cube,direction):
+  cube1 = cube.copy()
+  cube1[2]= np.rot90(cube[2], k = direction)
+  if direction == 1:
+    cube1[1,[4,5,1,0],:] = cube[1,[0,4,5,1],:]
+  elif direction == -1:
+     cube1[1,[0,4,5,1],:] = cube[1,[4,5,1,0],:]
+#Governs both the L and L' movement, L' movement occurs when direction = 1, L movment occurs when direction = -1
+
+def R(cube,direction):
+  cube1 = cube.copy()
+  cube1[4]= np.rot90(cube[4], k = direction)
+  if direction == 1:
+    cube1[3,[4,5,1,0],:] = cube[3,[0,4,5,1],:]
+  elif direction == -1:
+     cube1[3,[0,4,5,1],:] = cube[3,[4,5,1,0],:]
+#Governs both the R and R' movement, R' movement occurs when direction = 1, R movment occurs when direction = -1
+
+def C(cube,direction):
+  cube1 = cube.copy()
+  if direction == 1:
+    cube1[2,[4,5,1,0],:] = cube[2,[0,4,5,1],:]
+  elif direction == -1:
+     cube1[2,[0,4,5,1],:] = cube[2,[4,5,1,0],:]
+#For simplicity I made a new notation for a legal move which rotates the middle row vertically, it has the same properties as L and L'.
+
